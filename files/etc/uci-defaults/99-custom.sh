@@ -28,7 +28,7 @@ if [ ! -f "$SETTINGS_FILE" ]; then
     echo "PPPoE settings file not found. Skipping." >> $LOGFILE
 else
    # 读取pppoe信息($enable_pppoe、$pppoe_account、$pppoe_password)
-   . "$SETTINGS_FILE"
+   。 "$SETTINGS_FILE"
 fi
 
 # 网络设置
@@ -38,8 +38,8 @@ if [ "$count" -eq 1 ]; then
    uci set network.lan.proto='dhcp'
 elif [ "$count" -gt 1 ]; then
    # 多网口设备 支持修改为别的ip地址
-   uci set network.lan.ipaddr='192.168.100.1'
-   echo "set 192.168.100.1 at $(date)" >> $LOGFILE
+   uci set network.lan.ipaddr='192.168.2.1'
+   echo "set 192.168.2.1 at $(date)" >> $LOGFILE
    # 判断是否启用 PPPoE
    echo "print enable_pppoe value=== $enable_pppoe" >> $LOGFILE
    if [ "$enable_pppoe" = "yes" ]; then
