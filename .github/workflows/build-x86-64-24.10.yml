@@ -1,35 +1,26 @@
 name: build-x86-64-immortalwrt-24.10
 
 on:
+  schedule:
+    - cron: '10 16 * * *' # UTC时间16:10对应北京时间00:10
   workflow_dispatch:
     inputs:
       profile:
-        description: '请输入要编译固件大小 单位(MB)'
+        description: "设备profile名称"
         required: true
-        default: '1024'
+        default: "generic"
+      rootfs_size:
+        description: "根分区大小(MB)"
+        required: true
+        default: "1024"
       include_docker:
-        description: |
-          是否编译 Docker 插件
+        description: "包含Docker"
         required: true
-        default: 'yes'
+        default: "no"
         type: choice
         options:
           - 'yes'
           - 'no'
-      enable_pppoe:
-        description: "是否配置PPPoE拨号信息?"
-        required: true
-        default: 'no'
-        type: choice
-        options:
-        - 'yes'
-        - 'no'
-      pppoe_account:
-        description: "宽带账号 (若启用PPPoE)"
-        required: false
-      pppoe_password:
-        description: "宽带密码 (若启用PPPoE)"
-        required: false
 
 jobs:
   build:
@@ -43,14 +34,6 @@ jobs:
         run: chmod +x ${{ github.workspace }}/x86-64/build.sh
 
 
-      - name: Validate PPPoE Inputs
-        run: |
-          if [[ "${{ inputs.enable_pppoe }}" == "yes" ]]; then
-            if [[ -z "${{ inputs.pppoe_account }}" || -z "${{ inputs.pppoe_password }}" ]]; then
-              echo "Error: PPPoE account and password must be provided when PPPoE is enabled!"
-              exit 1
-            fi
-          fi
 
       - name: Build ImmortalWrt-x86-64-eif
         run: |
