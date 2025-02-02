@@ -8,7 +8,7 @@ echo "Include Docker: $INCLUDE_DOCKER"
 # 输出调试信息
 echo "$(date '+%Y-%m-%d %H:%M:%S') - 开始编译..."
 
-# 定义所需安装的包列表 下列插件你都可以自行删减
+# 定义所需安装的包列表
 PACKAGES=""
 PACKAGES="$PACKAGES curl"
 PACKAGES="$PACKAGES luci-i18n-diskman-zh-cn"
@@ -20,22 +20,17 @@ PACKAGES="$PACKAGES luci-i18n-opkg-zh-cn"
 PACKAGES="$PACKAGES luci-i18n-ttyd-zh-cn"
 PACKAGES="$PACKAGES luci-i18n-passwall-zh-cn"
 PACKAGES="$PACKAGES openssh-sftp-server"
-# 增加几个必备组件 方便用户安装iStore
 PACKAGES="$PACKAGES fdisk"
 PACKAGES="$PACKAGES script-utils"
 PACKAGES="$PACKAGES luci-i18n-samba4-zh-cn"
-
-# 判断是否需要编译 Docker 插件
-if [ "$INCLUDE_DOCKER" = "yes" ]; then
-    PACKAGES="$PACKAGES luci-i18n-dockerman-zh-cn"
-    echo "Adding package: luci-i18n-dockerman-zh-cn"
-fi
 
 # 构建镜像
 echo "$(date '+%Y-%m-%d %H:%M:%S') - Building image with the following packages:"
 echo "$PACKAGES"
 
-make image PROFILE="generic" PACKAGES="$PACKAGES" ROOTFS_PARTSIZE=$PROFILE
+# 构建固件
+cd /workdir/openwrt
+make -j$(nproc) || make -j1 V=s PACKAGES="$PACKAGES"
 
 if [ $? -ne 0 ]; then
     echo "$(date '+%Y-%m-%d %H:%M:%S') - Error: Build failed!"
