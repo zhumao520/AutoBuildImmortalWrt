@@ -1,6 +1,8 @@
 name: build-x86-64-immortalwrt-24.10
 
 on:
+  schedule:
+    - cron: '10 0 * * *'
   workflow_dispatch:
     inputs:
       profile:
@@ -11,7 +13,7 @@ on:
         description: |
           是否编译 Docker 插件
         required: true
-        default: 'yes'
+        default: 'no'
         type: choice
         options:
           - 'yes'
