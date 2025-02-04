@@ -56,8 +56,8 @@ jobs:
 
       - name: Build ImmortalWrt-x86-64-eif
         run: |
-          profiles="${{ github.event.inputs.profile }}"
-          include_docker="${{ github.event.inputs.include_docker }}"
+          profiles="${{ github.event.inputs.profile || '1024' }}"
+          include_docker="${{ github.event.inputs.include_docker || 'no' }}"
           IFS=',' read -r -a profile_array <<< "$profiles"
           
           for profile in "${profile_array[@]}"; do
@@ -104,3 +104,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+`
