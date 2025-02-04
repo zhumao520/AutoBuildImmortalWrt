@@ -77,13 +77,13 @@ jobs:
               immortalwrt/imagebuilder:x86-64-openwrt-24.10.0-rc4 /bin/bash /home/build/immortalwrt/build.sh
           done
 
-      # - name: Generate Firmware SHA-256
-      #   run: |
-      #     cp ${{ github.workspace }}/bin/targets/x86/64/*squashfs-combined-efi.img.gz ${{ github.workspace }}
-      #     for file in *squashfs-combined-efi.img.gz; do
-      #       sha256sum "$file" > "$file.sha256"
-      #       sha256sum -c "$file.sha256"
-      #     done
+      - name: Generate Firmware SHA-256
+        run: |
+          cd ${{ github.workspace }}/bin/targets/x86/64/
+          for file in *squashfs-combined-efi.img.gz; do
+            sha256sum "$file" > "$file.sha256"
+            sha256sum -c "$file.sha256"
+          done
 
       - name: Create info
         run: |
@@ -100,7 +100,7 @@ jobs:
           tag_name: Autobuild-x86-64
           body_path: ${{ github.workspace }}/info.md
           files: |
-            ${{ github.workspace }}/*squashfs-combined-efi.img.gz
+            ${{ github.workspace }}/bin/targets/x86/64/*squashfs-combined-efi.img.gz
           token: ${{ secrets.GITHUB_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
